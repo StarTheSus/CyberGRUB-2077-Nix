@@ -42,6 +42,14 @@
                 # Copy base theme files
                 cp -r CyberGRUB-2077/* $out/
 
+                # --- ICON PATCHES ---
+                # Map the NixOS icon to the configurations submenu
+                cp $out/icons/nixos.png $out/icons/submenu.png
+
+                # Map the memtest icon to all possible NixOS memtest classes
+                cp $out/icons/memtest.png $out/icons/Memtest86.png
+                cp $out/icons/memtest.png $out/icons/Memtest86+.png
+
                 # Apply custom logo if specified
                 if [ -f "img/logos/${logo}.png" ]; then
                   cp -f "img/logos/${logo}.png" "$out/logo.png"
