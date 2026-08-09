@@ -2,7 +2,7 @@
 
 ![](./preview.png)
 
-GRUB Theme inspired by Cyberpunk 2077.
+GRUB Theme inspired by Cyberpunk 2077 and imported to NixOS as a flake.
 
 <details>
   <summary><h2>LOGOS</h2></summary>
@@ -53,7 +53,64 @@ GRUB Theme inspired by Cyberpunk 2077.
     <img src="https://img.shields.io/badge/РУССКИЙ-white?style=for-the-badge"/>
 </a>
 
-## Installation [LOCAL]
+## How to use it
+
+Add the input to your flake.nix or equivalent.
+
+```nix
+inputs = {
+    # ... your existing inputs ...
+
+    cybergrub-2077 = {
+      url = "github:StarTheSus/CyberGRUB-2077-Nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+```
+
+Then add it to your output list.
+
+```nix
+outputs =
+  inputs@{
+    self,
+    nixpkgs,
+    # ... your existing outputs ...
+
+    cybergrub-2077,
+    ...
+  }:
+```
+
+Now you can add the input by importing `inputs` and grabbing the package.
+
+```nix
+{ config, pkgs, inputs, ... }: # <-- Make sure 'inputs' is listed here
+
+{
+  # ... your config ...
+
+  boot.loader = {
+    grub = {
+      enable = true;
+      efiSupport = true;
+      device = "nodev";
+      # Can be any logo, it is samurai by default. The line below defines "nixos" as the logo.
+      # Find logos under `img/logos` in the repository.
+      theme = inputs.cybergrub-2077.packages.${pkgs.system}.mkTheme { logo = "nixos"; };
+      gfxmodeEfi = "auto";
+      gfxpayloadEfi = "keep";
+    };
+  };
+}
+```
+> **Note:** To see the full list of supported logos you can pass to the `logo` argument while being too lazy to scroll up, check out the [`img/logos` directory](https://github.com/StarTheSus/CyberGRUB-2077-Nix/tree/base/img/logos).
+
+
+## Installation [LOCAL/UNRRECOMMENDED]
+
+This is an imperative method of installation. It is not recommended on NixOS as it is always better to do it declaratively, if not for reproducability, then for stability.
+To further clarify, this is only kept in the repository as-is from the forked one in case it is required for a specific use-case.
 
 ### 1. Clone the repo
 
